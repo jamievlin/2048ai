@@ -29,20 +29,22 @@ class AgentSarsa2048(rl_glue.BaseAgent):
         self._oldfeatvec = None
 
         print('trial ended. reward=', reward)
-        print('w=', self._w_vec)
+        # print('w=', self._w_vec)
 
     def agent_init(self):
-        self._w_vec = np.zeros((16*11)+4)
+        self._w_vec = np.zeros(16*11*4)
         self._oldfeatvec = None
 
     def q_func(self, state, action):
         return self._featvec(state, action) @ self._w_vec
 
     def _featvec(self, tile, action):
+        arrsize = 16*11
+        base_feat_vec = np.zeros(arrsize*4)
         base_tile = self._codetile(tile)
-        action_tile = [0]*4
-        action_tile[action] = 1
-        return np.array(base_tile+action_tile)
+
+        base_feat_vec[action*arrsize:(action+1)*arrsize] = base_tile
+        return base_feat_vec
 
     def epsilongreedy(self, tile, possible_actions: set)->int:
         if np.random.rand() < self._epsilon:

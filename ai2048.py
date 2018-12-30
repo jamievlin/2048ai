@@ -1,5 +1,5 @@
 import sarsa2048
-import game2048
+import env2048
 import rl_glue
 import numpy as np
 
@@ -7,7 +7,7 @@ import sys
 
 
 def main():
-    gameEnv = game2048.Env2048()
+    gameEnv = env2048.Env2048()
     agent = sarsa2048.AgentSarsa2048()
     rl_glue_ag = rl_glue.RLGlue(gameEnv, agent)
 

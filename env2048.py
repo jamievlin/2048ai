@@ -35,11 +35,13 @@ class Env2048(rl_glue.BaseEnvironment):
         if self._2048game.win():
             terminal = True
             reward = 1
-            self._2048game.print()
+
         elif self._2048game.getNbEmptyTiles() == 0 and not self._2048game.collapsible():
             terminal = True
             reward = -1
-        #
+
+        if terminal:
+            self._2048game.print()
         return reward, self.get_state(), terminal
 
     def get_state(self)->dict:
