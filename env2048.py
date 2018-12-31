@@ -5,10 +5,12 @@ from game2048 import Game2048
 class Env2048(rl_glue.BaseEnvironment):
     def __init__(self):
         self._2048game = None
+        self.moves_dict = None
 
     def env_init(self):
         self._2048game = None
         self.moves_dict = None
+        self._gamecount = 0
 
     def env_message(self, message):
         return super().env_message(message)
@@ -34,14 +36,17 @@ class Env2048(rl_glue.BaseEnvironment):
 
         if self._2048game.win():
             terminal = True
-            reward = 1
-
+            reward = 10000+self._2048game.getScore()
         elif self._2048game.getNbEmptyTiles() == 0 and not self._2048game.collapsible():
             terminal = True
-            reward = -1
+            reward = 0.1*self._2048game.getScore()
 
         if terminal:
-            self._2048game.print()
+            self._gamecount = self._gamecount+1
+
+            if self._gamecount % 50 == 0:
+                self._2048game.print()
+
         return reward, self.get_state(), terminal
 
     def get_state(self)->dict:
